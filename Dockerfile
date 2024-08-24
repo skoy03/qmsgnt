@@ -43,7 +43,7 @@ RUN apt-get update && apt-get install -y \
 WORKDIR /usr/src/app
 COPY start.sh ./start.sh
 
-RUN curl -o /root/linuxqq.deb https://dldir1.qq.com/qqfile/qq/QQNT/Linux/QQ_3.2.12_240819_$(arch | sed s/aarch64/arm64/ | sed s/x86_64/amd64/)_01.deb && \
+RUN curl -o /root/linuxqq.deb https://dldir1.qq.com/qqfile/qq/QQNT/Linux/QQ_3.2.9_240617_$(arch | sed s/aarch64/arm64/ | sed s/x86_64/amd64/)_01.deb && \
     dpkg -i /root/linuxqq.deb && apt-get -f install -y && chmod 777 start.sh && rm /root/linuxqq.deb
 
 RUN curl -L -o /tmp/QmsgNtClient-NapCatQQ.zip https://cdn.ooomn.cn/QmsgNtClient-NapCatQQ/download/v$(curl  https://cdn.ooomn.cn/QmsgNtClient-NapCatQQ/package.json | grep '"version":' | sed -E 's/.*([0-9]{1,}\.[0-9]{1,}\.[0-9]{1,}).*/\1/')/QmsgNtClient-NapCatQQ_$(arch | sed s/aarch64/arm64/ | sed s/x86_64/amd64/).zip
