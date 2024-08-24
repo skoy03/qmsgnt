@@ -41,18 +41,12 @@ RUN apt-get update && apt-get install -y \
     /var/tmp/*
 
 WORKDIR /usr/src/app
-
 COPY start.sh ./start.sh
 
-RUN arch=$(arch | sed s/aarch64/arm64/ | sed s/x86_64/amd64/) && \
-    curl -o linuxqq.deb https://dldir1.qq.com/qqfile/qq/QQNT/Linux/QQ_3.2.12_240819_${arch}_01.deb && \
-    dpkg -i --force-depends linuxqq.deb && rm linuxqq.deb && \
-    chmod +x start.sh && \
-    echo "(async () => {await import('file:///usr/src/app/QmsgNtClient-NapCatQQ/napcat.mjs');})();" > /opt/QQ/resources/app/app_launcher/index.js
+RUN curl -o /root/linuxqq.deb https://dldir1.qq.com/qqfile/qq/QQNT/Linux/QQ_3.2.12_240819_$(arch | sed s/aarch64/arm64/ | sed s/x86_64/amd64/)_01.deb && \
+    dpkg -i /root/linuxqq.deb && apt-get -f install -y && chmod 777 start.sh && rm /root/linuxqq.deb
 
-RUN curl -L -o /tmp/QmsgNtClient-NapCatQQ.zip https://cdn.ooomn.cn/QmsgNtClient-NapCatQQ/download/v$(curl https://cdn.ooomn.cn/QmsgNtClient-NapCatQQ/package.json | grep '"version":' | sed -E 's/.*([0-9]{1,}\.[0-9]{1,}\.[0-9]{1,}).*/\1/')/QmsgNtClient-NapCatQQ.zip
-RUN unzip -o /tmp/QmsgNtClient-NapCatQQ.zip -d ./QmsgNtClient-NapCatQQ
-RUN cd ./QmsgNtClient-NapCatQQ && npm config set registry https://mirrors.cloud.tencent.com/npm/ && npm i
+RUN curl -L -o /tmp/QmsgNtClient-NapCatQQ.zip https://cdn.ooomn.cn/QmsgNtClient-NapCatQQ/download/v$(curl  https://cdn.ooomn.cn/QmsgNtClient-NapCatQQ/package.json | grep '"version":' | sed -E 's/.*([0-9]{1,}\.[0-9]{1,}\.[0-9]{1,}).*/\1/')/QmsgNtClient-NapCatQQ_$(arch | sed s/aarch64/arm64/ | sed s/x86_64/amd64/).zip
 
 VOLUME /usr/src/app/QmsgNtClient-NapCatQQ/config
 VOLUME /usr/src/app/QmsgNtClient-NapCatQQ/logs
